@@ -1,27 +1,17 @@
 package com.eheiker.appdirect;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ApplicationContext;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @EnableAutoConfiguration // spring-boot auto-configuration
+@EnableConfigurationProperties
 @ComponentScan
 public class Application {
-
-
-
     public static void main(String[] args) {
-
-        ApplicationContext ctx = SpringApplication.run(Application.class, args);
-
-        Logger log = LoggerFactory.getLogger(Application.class);
-
-        log.info("test");
+        SpringApplication.run(Application.class, args);
     }
 }

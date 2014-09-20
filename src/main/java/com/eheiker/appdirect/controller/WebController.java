@@ -7,15 +7,15 @@ import org.springframework.web.bind.annotation.RestController;
 import com.eheiker.appdirect.logging.AutowiredLogger;
 
 @RestController
-public class TestController {
+public class WebController {
 
     @AutowiredLogger
     private Logger log;
 
-    @RequestMapping("/hello")
-    public String hello() {
-        log.info("entered hello controller");
-
-        return "world";
+    @RequestMapping("/")
+    public String index() {
+        return "nothing here";
     }
+
+
 }

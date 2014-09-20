@@ -2,18 +2,28 @@ package com.eheiker.appdirect;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.IntegrationTest;
+import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.web.context.WebApplicationContext;
 
-// https://github.com/spring-projects/spring-boot/blob/master/spring-boot-samples/spring-boot-sample-actuator-log4j/src/test/java/sample/actuator/log4j/SampleActuatorApplicationTests.java
+import static org.junit.Assert.assertNotNull;
+
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {Application.class})
+@SpringApplicationConfiguration(classes = Application.class)
+@WebAppConfiguration
 @DirtiesContext
+@IntegrationTest("server.port=0")
 public class ApplicationTest {
 
-    @Test
-    public void test() {
+    @Autowired
+    WebApplicationContext ctx;
 
+    @Test
+    public void testContextLoads() {
+        assertNotNull(ctx);
     }
 }
