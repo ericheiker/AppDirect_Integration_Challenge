@@ -1,1 +1,1 @@
-web:    java $JAVA_OPTS -jar target/appdirect-0.1.0.jar
+web:    java $JAVA_OPTS -jar -Dlocal.server.port=$PORT target/appdirect-0.1.0.jar
