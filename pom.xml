@@ -19,6 +19,8 @@
     </parent>
 
     <dependencies>
+		<!-- Spring Boot starter POMs
+		   More available here: http://docs.spring.io/spring-boot/docs/1.1.6.RELEASE/reference/htmlsingle/#using-boot-starter-poms -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -28,6 +30,13 @@
 			<artifactId>spring-boot-starter-tomcat</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.apache.oltu.oauth2</groupId>
+			<artifactId>org.apache.oltu.oauth2.client</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+
+		<!-- Test dependencies -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
