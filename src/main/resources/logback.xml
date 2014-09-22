@@ -4,4 +4,5 @@
 	<logger name="org.springframework.web" level="DEBUG"/>
 	<logger name="org.springframework.http.converter.xml" level="DEBUG"/>
 	<logger name="com.eheiker.appdirect" level="DEBUG"/>
+	<logger name="org.springframework.security.web" level="DEBUG"/>
 </configuration>
