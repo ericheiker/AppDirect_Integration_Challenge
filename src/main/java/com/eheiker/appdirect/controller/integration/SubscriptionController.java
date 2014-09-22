@@ -54,15 +54,6 @@ public class SubscriptionController {
     public SubscriptionEventResult create(HttpServletRequest request, @RequestParam String url, @RequestParam String token) throws OAuthSystemException, OAuthProblemException, JAXBException, OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
         // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
 
-        StringBuilder info = new StringBuilder();
-        info.append("requestURI = " + request.getRequestURI() + "\n");
-        info.append("queryString = " + request.getQueryString() + "\n");
-        Enumeration<String> headerNames = request.getHeaderNames();
-        while (headerNames.hasMoreElements()) {
-            String headerName = headerNames.nextElement();
-            info.append(headerName + ": " + request.getHeader(headerName) + "\n");
-        }
-
         // perform OAuth-signed GET request to url to get event details
         SubscriptionOrderEvent orderEvent = eventService.getEvent(url, token, SubscriptionOrderEvent.class);
 

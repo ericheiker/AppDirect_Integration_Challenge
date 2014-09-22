@@ -1,20 +1,20 @@
 package com.eheiker.appdirect.controller;
 
 import org.slf4j.Logger;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.eheiker.appdirect.logging.AutowiredLogger;
 
-@RestController
-public class WebController {
+@Controller
+public class HomeController {
 
     @AutowiredLogger
     private Logger log;
 
     @RequestMapping("/")
     public String index() {
-        return "nothing here";
+        return "index";
     }
 
 
