@@ -1,9 +1,18 @@
 package com.eheiker.appdirect.config;
 
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.servlet.configuration.EnableWebMvcSecurity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.openid.OpenIDAuthenticationToken;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 import com.eheiker.appdirect.security.CustomUserDetailsService;
 
@@ -34,5 +43,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .attribute("lastname")
                         .type("http://axschema.org/namePerson/last")
                         .required(true);
+        http
+            .logout()
+                .logoutSuccessHandler(new LogoutSuccessHandler() {
+                    @Override
+                    public void onLogoutSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException, ServletException {
+                        if (authentication instanceof OpenIDAuthenticationToken) {
+                            OpenIDAuthenticationToken openIDToken = (OpenIDAuthenticationToken) authentication;
+                            response.sendRedirect("https://www.appdirect.com/applogout?openid=" + openIDToken.getIdentityUrl());
+                        } else {
+                            response.sendRedirect("/?logout");
+                        }
+
+                        return;
+                    }
+
+                });
     }
 }

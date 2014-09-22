@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class UserController {
 
-    @RequestMapping(value = "/user/", method = RequestMethod.GET)
+    @RequestMapping(value = "/user", method = RequestMethod.GET)
     public String show(Model model, OpenIDAuthenticationToken authentication) {
         model.addAttribute("authentication", authentication);
         return "user/show";
