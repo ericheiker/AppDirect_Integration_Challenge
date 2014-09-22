@@ -43,9 +43,7 @@ public class SubscriptionController {
     EventService eventService;
 
     @RequestMapping(value = "/create",
-                    method = RequestMethod.POST,
-                    consumes = MediaType.APPLICATION_XML_VALUE,
-                    produces = MediaType.APPLICATION_XML_VALUE)
+                    method = RequestMethod.GET)
     public SubscriptionEventResult create(HttpServletRequest request) throws OAuthSystemException, OAuthProblemException {
         // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
 
