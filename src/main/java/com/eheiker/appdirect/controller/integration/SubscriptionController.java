@@ -1,9 +1,15 @@
 package com.eheiker.appdirect.controller.integration;
 
+import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.xml.bind.JAXBException;
+
+import oauth.signpost.exception.OAuthCommunicationException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
 
 import org.apache.oltu.oauth2.client.OAuthClient;
 import org.apache.oltu.oauth2.client.URLConnectionClient;
@@ -13,6 +19,7 @@ import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
 import org.apache.oltu.oauth2.common.OAuth.HttpMethod;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.apache.oltu.oauth2.common.validators.OAuthValidator;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -44,26 +51,27 @@ public class SubscriptionController {
 
     @RequestMapping(value = "/create",
                     method = RequestMethod.GET)
-    public SubscriptionEventResult create(HttpServletRequest request) throws OAuthSystemException, OAuthProblemException {
+    public SubscriptionEventResult create(HttpServletRequest request, @RequestParam String url, @RequestParam String token) throws OAuthSystemException, OAuthProblemException, JAXBException, OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
         // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
 
-        log.info("requestURI = " + request.getRequestURI());
-        log.info("queryString = " + request.getQueryString());
+        StringBuilder info = new StringBuilder();
+        info.append("requestURI = " + request.getRequestURI() + "\n");
+        info.append("queryString = " + request.getQueryString() + "\n");
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
             String headerName = headerNames.nextElement();
-            log.info(headerName + ": " + request.getHeader(headerName));
+            info.append(headerName + ": " + request.getHeader(headerName) + "\n");
         }
 
         // perform OAuth-signed GET request to url to get event details
-        //SubscriptionOrderEvent orderEvent = eventService.getEvent(url, token, SubscriptionOrderEvent.class);
+        SubscriptionOrderEvent orderEvent = eventService.getEvent(url, token, SubscriptionOrderEvent.class);
 
         // create an account
 
         // return result XML
         SubscriptionEventResult result = new SubscriptionEventResult();
         result.setAccountIdentifier("12345");
-        result.setMessage("successfully created account");
+        result.setMessage(orderEvent.toString());
         result.setSuccess(false);
 
         return result;
