@@ -3,4 +3,5 @@
 	<include resource="org/springframework/boot/logging/logback/base.xml"/>
 	<logger name="org.springframework.web" level="DEBUG"/>
 	<logger name="org.springframework.http.converter.xml" level="DEBUG"/>
+	<logger name="com.eheiker.appdirect" level="DEBUG"/>
 </configuration>

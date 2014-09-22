@@ -72,7 +72,7 @@ public class SubscriptionController {
         SubscriptionEventResult result = new SubscriptionEventResult();
         result.setAccountIdentifier("12345");
         result.setMessage(orderEvent.toString());
-        result.setSuccess(false);
+        result.setSuccess(true);
 
         return result;
     }

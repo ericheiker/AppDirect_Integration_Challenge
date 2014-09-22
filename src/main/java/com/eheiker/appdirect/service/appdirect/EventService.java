@@ -1,7 +1,9 @@
 package com.eheiker.appdirect.service.appdirect;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
+import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -13,6 +15,7 @@ import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -54,10 +57,18 @@ public class EventService {
         HttpResponse response = client.execute(getRequest);
 
         HttpEntity entity = response.getEntity();
+        InputStream content = entity.getContent();
+
+
+        if (log.isDebugEnabled()) {
+            String strContent = IOUtils.toString(content);
+            log.debug(strContent);
+            content = IOUtils.toInputStream(strContent);
+        }
 
         JAXBContext context = JAXBContext.newInstance(clazz);
         Unmarshaller unmarshaller = context.createUnmarshaller();
-        T result = (T) unmarshaller.unmarshal(entity.getContent());
+        T result = (T) unmarshaller.unmarshal(content);
 
         log.debug(result.toString());
 
