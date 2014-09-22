@@ -4,5 +4,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
 public enum EventType {
-    SUBSCRIPTION_ORDER
+    SUBSCRIPTION_ORDER,
+    SUBSCRIPTION_CANCEL
 }

@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
+import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionCancelEvent;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionEventResult;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionOrderEvent;
 import com.eheiker.appdirect.logging.AutowiredLogger;
@@ -49,8 +50,7 @@ public class SubscriptionController {
     @Autowired
     EventService eventService;
 
-    @RequestMapping(value = "/create",
-                    method = RequestMethod.GET)
+    @RequestMapping(value = "/create", method = RequestMethod.GET)
     public SubscriptionEventResult create(HttpServletRequest request, @RequestParam String url, @RequestParam String token) throws OAuthSystemException, OAuthProblemException, JAXBException, OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
         // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
 
@@ -77,16 +77,55 @@ public class SubscriptionController {
         return result;
     }
 
-    @RequestMapping("/change")
-    public void change() {
+    @RequestMapping(value = "/change", method = RequestMethod.GET)
+    public SubscriptionEventResult change(@RequestParam String url, @RequestParam String token) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthSystemException, JAXBException, OAuthProblemException, OAuthCommunicationException, IOException {
+        // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
 
+        // perform OAuth-signed GET request to url to get event details
+        SubscriptionOrderEvent orderEvent = eventService.getEvent(url, token, SubscriptionOrderEvent.class);
+
+        // create an account
+
+        // return result XML
+        SubscriptionEventResult result = new SubscriptionEventResult();
+        result.setAccountIdentifier("12345");
+        result.setMessage(orderEvent.toString());
+        result.setSuccess(true);
+
+        return result;
     }
     @RequestMapping("/cancel")
-    public void cancel() {
+    public SubscriptionEventResult cancel(@RequestParam String url, @RequestParam String token) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthSystemException, JAXBException, OAuthProblemException, OAuthCommunicationException, IOException {
+        // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
 
+        // perform OAuth-signed GET request to url to get event details
+        SubscriptionCancelEvent event = eventService.getEvent(url, token, SubscriptionCancelEvent.class);
+
+        // create an account
+
+        // return result XML
+        SubscriptionEventResult result = new SubscriptionEventResult();
+        result.setAccountIdentifier("12345");
+        result.setMessage(event.toString());
+        result.setSuccess(true);
+
+        return result;
     }
     @RequestMapping("/status")
-    public void status() {
+    public SubscriptionEventResult status(@RequestParam String url, @RequestParam String token) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthSystemException, JAXBException, OAuthProblemException, OAuthCommunicationException, IOException {
+        // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
 
+        // perform OAuth-signed GET request to url to get event details
+        SubscriptionOrderEvent orderEvent = eventService.getEvent(url, token, SubscriptionOrderEvent.class);
+
+        // create an account
+
+        // return result XML
+        SubscriptionEventResult result = new SubscriptionEventResult();
+        result.setAccountIdentifier("12345");
+        result.setMessage(orderEvent.toString());
+        result.setSuccess(true);
+
+        return result;
     }
 }
