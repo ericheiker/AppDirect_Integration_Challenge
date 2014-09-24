@@ -2,6 +2,8 @@ package com.eheiker.appdirect.controller.integration;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
@@ -27,6 +29,7 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth.consumer.client.CoreOAuthConsumerSupport;
 import org.springframework.security.oauth.provider.filter.CoreOAuthProviderSupport;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -56,9 +59,21 @@ public class SubscriptionController {
 
     @RequestMapping(value = "/create")
     public SubscriptionEventResult create(HttpServletRequest request, @RequestParam String url, @RequestParam String token) throws OAuthSystemException, OAuthProblemException, JAXBException, OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
+        if (log.isDebugEnabled()) {
+            CoreOAuthProviderSupport support = new CoreOAuthProviderSupport();
+            Map<String, String> oAuthParameters = support.parseParameters(request);
+
+            StringBuilder sb = new StringBuilder();
+            sb.append(request.getRequestURI()).append("?").append(request.getQueryString());
+            for (Entry<String, String> entry : oAuthParameters.entrySet()) {
+                sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
+            }
+
+            log.debug(sb.toString());
+        }
+
         // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
-        CoreOAuthProviderSupport support = new CoreOAuthProviderSupport();
-        Map<String, String> oAuthParameters = support.parseParameters(request);
+
         //CoreOAuthConsumerSupport consumerSupport = new CoreOAuthConsumerSupport();
         OAuth1Parameters oAuth1Parameters = new OAuth1Parameters();
         oAuth1Parameters.putAll(oAuth1Parameters);
