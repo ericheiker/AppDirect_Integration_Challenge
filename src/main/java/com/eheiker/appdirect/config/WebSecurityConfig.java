@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         //http
         //    .addFilterAfter(oAuthProviderProcessingFilter(), OpenIDAuthenticationFilter.class);
     }
-
+/*
     @Bean
     OAuthProviderProcessingFilter oAuthProviderProcessingFilter() {
         ProtectedResourceProcessingFilter filter = new ProtectedResourceProcessingFilter();
@@ -93,7 +93,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public OAuthProviderTokenServices providerTokenServices() {
         return new InMemoryProviderTokenServices();
     }
-
+*/
 
     private class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         @Override
