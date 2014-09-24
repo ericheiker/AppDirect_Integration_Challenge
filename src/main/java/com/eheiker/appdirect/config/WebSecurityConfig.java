@@ -80,6 +80,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         BaseConsumerDetails consumerDetails = new BaseConsumerDetails();
         consumerDetails.setConsumerKey("appdirect-integration-challenge-14572");
         consumerDetails.setSignatureSecret(new SharedConsumerSecretImpl("dBwGkwY2R84FAXwS"));
+        consumerDetails.setRequiredToObtainAuthenticatedToken(false);
 
         Map<String, BaseConsumerDetails> consumerDetailsStore = new HashMap<>();
         consumerDetailsStore.put("appdirect-integration-challenge-14572", consumerDetails);
