@@ -72,19 +72,6 @@ public class SubscriptionController {
             log.debug(sb.toString());
         }
 
-        // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
-
-        //CoreOAuthConsumerSupport consumerSupport = new CoreOAuthConsumerSupport();
-        OAuth1Parameters oAuth1Parameters = new OAuth1Parameters();
-        oAuth1Parameters.putAll(oAuth1Parameters);
-
-        HmaSha1Method method = new HmaSha1Method();
-        //method.verify(support.getSignatureBaseString(request), );
-
-        DefaultOAuthConsumer consumer = new DefaultOAuthConsumer(oAuth1Parameters.getConsumerKey(), "dBwGkwY2R84FAXwS");
-        HttpRequest sign = consumer.sign(request);
-        String requestUrl = sign.getRequestUrl();
-
         GetSubscriptionOrderEventAction action = new GetSubscriptionOrderEventAction(appDirectClient);
         action.setUrl(url);
         action.setToken(token);
