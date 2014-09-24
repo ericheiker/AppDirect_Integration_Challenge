@@ -1,5 +1,7 @@
 package com.eheiker.appdirect.client.action;
 
+import lombok.experimental.Builder;
+
 import com.eheiker.appdirect.client.AppDirectClient;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionOrderEvent;
 

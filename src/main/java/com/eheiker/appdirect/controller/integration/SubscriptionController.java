@@ -1,18 +1,32 @@
 package com.eheiker.appdirect.controller.integration;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
 
+import oauth.signpost.basic.DefaultOAuthConsumer;
 import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
+import oauth.signpost.http.HttpRequest;
 
+import org.apache.oltu.oauth2.common.OAuth;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
+import org.apache.oltu.oauth2.common.parameters.OAuthParametersApplier;
+import org.glassfish.jersey.oauth1.signature.HmaSha1Method;
+import org.glassfish.jersey.oauth1.signature.OAuth1Parameters;
+import org.glassfish.jersey.oauth1.signature.OAuth1Request;
+import org.glassfish.jersey.oauth1.signature.OAuth1Secrets;
+import org.glassfish.jersey.oauth1.signature.OAuth1Signature;
+import org.glassfish.jersey.oauth1.signature.OAuth1SignatureMethod;
+import org.glassfish.jersey.server.oauth1.internal.OAuthServerRequest;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.oauth.consumer.client.CoreOAuthConsumerSupport;
+import org.springframework.security.oauth.provider.filter.CoreOAuthProviderSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,44 +54,38 @@ public class SubscriptionController {
     @Autowired
     AppDirectClient appDirectClient;
 
-    @RequestMapping(value = "/create", method = RequestMethod.GET)
+    @RequestMapping(value = "/create")
     public SubscriptionEventResult create(HttpServletRequest request, @RequestParam String url, @RequestParam String token) throws OAuthSystemException, OAuthProblemException, JAXBException, OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
         // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
+        CoreOAuthProviderSupport support = new CoreOAuthProviderSupport();
+        Map<String, String> oAuthParameters = support.parseParameters(request);
+        //CoreOAuthConsumerSupport consumerSupport = new CoreOAuthConsumerSupport();
+        OAuth1Parameters oAuth1Parameters = new OAuth1Parameters();
+        oAuth1Parameters.putAll(oAuth1Parameters);
+
+        HmaSha1Method method = new HmaSha1Method();
+        //method.verify(support.getSignatureBaseString(request), );
+
+        DefaultOAuthConsumer consumer = new DefaultOAuthConsumer(oAuth1Parameters.getConsumerKey(), "dBwGkwY2R84FAXwS");
+        HttpRequest sign = consumer.sign(request);
+        String requestUrl = sign.getRequestUrl();
 
         GetSubscriptionOrderEventAction action = new GetSubscriptionOrderEventAction(appDirectClient);
         action.setUrl(url);
         action.setToken(token);
-        SubscriptionOrderEvent event = action.execute().getEntity();
+        ActionResult<SubscriptionOrderEvent> actionResult = action.execute();
 
-        // create an account
-            // create user from event
-            // userService.create();
+        //TODO: create an account
 
         // return result XML
         SubscriptionEventResult result = new SubscriptionEventResult();
         result.setAccountIdentifier("12345");
-        result.setMessage(event.toString());
-        result.setSuccess(true);
+        result.setMessage("Welcome to AppDirect!");
+        result.setSuccess(actionResult.isSuccess());
 
         return result;
     }
 
-    @RequestMapping(value = "/change", method = RequestMethod.GET)
-    public SubscriptionEventResult change(@RequestParam String url, @RequestParam String token) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthSystemException, JAXBException, OAuthProblemException, OAuthCommunicationException, IOException {
-        // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
-
-        // perform OAuth-signed GET request to url to get event details
-
-        // create an account
-
-        // return result XML
-        SubscriptionEventResult result = new SubscriptionEventResult();
-        result.setAccountIdentifier("12345");
-        //result.setMessage(orderEvent.toString());
-        result.setSuccess(true);
-
-        return result;
-    }
     @RequestMapping("/cancel")
     public SubscriptionEventResult cancel(@RequestParam String url, @RequestParam String token) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthSystemException, JAXBException, OAuthProblemException, OAuthCommunicationException, IOException {
         // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
@@ -94,23 +102,6 @@ public class SubscriptionController {
         SubscriptionEventResult result = new SubscriptionEventResult();
         result.setAccountIdentifier("12345");
         result.setMessage(event.toString());
-        result.setSuccess(true);
-
-        return result;
-    }
-    @RequestMapping("/status")
-    public SubscriptionEventResult status(@RequestParam String url, @RequestParam String token) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthSystemException, JAXBException, OAuthProblemException, OAuthCommunicationException, IOException {
-        // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
-
-        // perform OAuth-signed GET request to url to get event details
-
-
-        // create an account
-
-        // return result XML
-        SubscriptionEventResult result = new SubscriptionEventResult();
-        result.setAccountIdentifier("12345");
-        //result.setMessage(orderEvent.toString());
         result.setSuccess(true);
 
         return result;
