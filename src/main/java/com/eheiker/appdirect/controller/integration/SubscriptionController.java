@@ -28,7 +28,9 @@ import org.glassfish.jersey.server.oauth1.internal.OAuthServerRequest;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth.consumer.client.CoreOAuthConsumerSupport;
+import org.springframework.security.oauth.provider.ConsumerAuthentication;
 import org.springframework.security.oauth.provider.filter.CoreOAuthProviderSupport;
+import org.springframework.security.web.bind.annotation.AuthenticationPrincipal;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -58,18 +60,11 @@ public class SubscriptionController {
     AppDirectClient appDirectClient;
 
     @RequestMapping(value = "/create")
-    public SubscriptionEventResult create(HttpServletRequest request, @RequestParam String url, @RequestParam String token) throws OAuthSystemException, OAuthProblemException, JAXBException, OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
+    public SubscriptionEventResult create(HttpServletRequest request, @RequestParam String url, @RequestParam String token, @AuthenticationPrincipal ConsumerAuthentication authentication) {
         if (log.isDebugEnabled()) {
-            CoreOAuthProviderSupport support = new CoreOAuthProviderSupport();
-            Map<String, String> oAuthParameters = support.parseParameters(request);
-
-            StringBuilder sb = new StringBuilder();
-            sb.append(request.getRequestURI()).append("?").append(request.getQueryString());
-            for (Entry<String, String> entry : oAuthParameters.entrySet()) {
-                sb.append(entry.getKey()).append(": ").append(entry.getValue()).append("\n");
-            }
-
-            log.debug(sb.toString());
+            log.debug("request = " + request.getRequestURI() + "?" + request.getQueryString());
+            log.debug("authenticated = " + authentication.isAuthenticated());
+            log.debug("signature validated = " + authentication.isSignatureValidated());
         }
 
         GetSubscriptionOrderEventAction action = new GetSubscriptionOrderEventAction(appDirectClient);
@@ -89,16 +84,13 @@ public class SubscriptionController {
     }
 
     @RequestMapping("/cancel")
-    public SubscriptionEventResult cancel(@RequestParam String url, @RequestParam String token) throws OAuthMessageSignerException, OAuthExpectationFailedException, OAuthSystemException, JAXBException, OAuthProblemException, OAuthCommunicationException, IOException {
-        // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
+    public SubscriptionEventResult cancel(@RequestParam String url, @RequestParam String token)  {
 
-        // perform OAuth-signed GET request to url to get event details
+        // get event details
         GetSubscriptionCancelEventAction action = new GetSubscriptionCancelEventAction(appDirectClient);
         action.setUrl(url);
         action.setToken(token);
         SubscriptionCancelEvent event = action.execute().getEntity();
-
-        // create an account
 
         // return result XML
         SubscriptionEventResult result = new SubscriptionEventResult();
