@@ -3,7 +3,7 @@ package com.eheiker.appdirect.client.action;
 import com.eheiker.appdirect.client.AppDirectClient;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionCancelEvent;
 
-public class GetSubscriptionCancelEventAction extends GetEventAction<SubscriptionCancelEvent> {
+public class GetSubscriptionCancelEventAction extends GetEventAction {
 
     public GetSubscriptionCancelEventAction(final AppDirectClient client) {
         super(client);
