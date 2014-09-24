@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eheiker.appdirect.client.AppDirectClient;
-import com.eheiker.appdirect.client.EventService;
 import com.eheiker.appdirect.client.action.ActionResult;
+import com.eheiker.appdirect.client.action.GetSubscriptionCancelEventAction;
 import com.eheiker.appdirect.client.action.GetSubscriptionOrderEventAction;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionCancelEvent;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionEventResult;
@@ -38,9 +38,6 @@ public class SubscriptionController {
     Logger log;
 
     @Autowired
-    EventService eventService;
-
-    @Autowired
     AppDirectClient appDirectClient;
 
     @RequestMapping(value = "/create", method = RequestMethod.GET)
@@ -50,7 +47,7 @@ public class SubscriptionController {
         GetSubscriptionOrderEventAction action = new GetSubscriptionOrderEventAction(appDirectClient);
         action.setUrl(url);
         action.setToken(token);
-        ActionResult<SubscriptionOrderEvent> event = action.execute();
+        SubscriptionOrderEvent event = action.execute().getEntity();
 
         // create an account
             // create user from event
@@ -70,14 +67,13 @@ public class SubscriptionController {
         // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
 
         // perform OAuth-signed GET request to url to get event details
-        SubscriptionOrderEvent orderEvent = eventService.getEvent(url, token, SubscriptionOrderEvent.class);
 
         // create an account
 
         // return result XML
         SubscriptionEventResult result = new SubscriptionEventResult();
         result.setAccountIdentifier("12345");
-        result.setMessage(orderEvent.toString());
+        //result.setMessage(orderEvent.toString());
         result.setSuccess(true);
 
         return result;
@@ -87,7 +83,10 @@ public class SubscriptionController {
         // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
 
         // perform OAuth-signed GET request to url to get event details
-        SubscriptionCancelEvent event = eventService.getEvent(url, token, SubscriptionCancelEvent.class);
+        GetSubscriptionCancelEventAction action = new GetSubscriptionCancelEventAction(appDirectClient);
+        action.setUrl(url);
+        action.setToken(token);
+        SubscriptionCancelEvent event = action.execute().getEntity();
 
         // create an account
 
@@ -104,14 +103,14 @@ public class SubscriptionController {
         // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
 
         // perform OAuth-signed GET request to url to get event details
-        SubscriptionOrderEvent orderEvent = eventService.getEvent(url, token, SubscriptionOrderEvent.class);
+
 
         // create an account
 
         // return result XML
         SubscriptionEventResult result = new SubscriptionEventResult();
         result.setAccountIdentifier("12345");
-        result.setMessage(orderEvent.toString());
+        //result.setMessage(orderEvent.toString());
         result.setSuccess(true);
 
         return result;
