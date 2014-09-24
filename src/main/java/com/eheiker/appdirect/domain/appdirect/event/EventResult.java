@@ -1,4 +1,4 @@
-package com.eheiker.appdirect.domain.appdirect.event.subscription;
+package com.eheiker.appdirect.domain.appdirect.event;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -11,7 +11,7 @@ import lombok.ToString;
 @ToString
 @XmlRootElement(name = "result")
 @XmlAccessorType(value = XmlAccessType.FIELD)
-public class SubscriptionEventResult {
+public class EventResult {
 
     private boolean success;
     private String message;

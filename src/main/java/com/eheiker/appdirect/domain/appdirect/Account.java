@@ -1,4 +1,4 @@
-package com.eheiker.appdirect.domain.appdirect.event;
+package com.eheiker.appdirect.domain.appdirect;
 
 import lombok.Data;
 import lombok.ToString;
@@ -7,4 +7,5 @@ import lombok.ToString;
 @ToString
 public class Account {
     private String accountIdentifier;
+    private String status;
 }

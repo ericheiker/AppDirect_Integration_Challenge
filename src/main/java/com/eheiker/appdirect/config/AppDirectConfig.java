@@ -17,8 +17,6 @@ public class AppDirectConfig {
 
     @Bean
     public AppDirectClient appDirectClient() {
-        AppDirectClient client = new AppDirectClient("appdirect-integration-challenge-14572", "dBwGkwY2R84FAXwS");
-
-        return client;
+        return new AppDirectClient(consumerKey, secret);
     }
 }

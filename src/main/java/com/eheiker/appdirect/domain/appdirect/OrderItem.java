@@ -1,4 +1,4 @@
-package com.eheiker.appdirect.domain.appdirect.event;
+package com.eheiker.appdirect.domain.appdirect;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

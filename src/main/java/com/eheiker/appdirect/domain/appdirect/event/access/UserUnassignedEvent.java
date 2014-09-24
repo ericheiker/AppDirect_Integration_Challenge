@@ -1,4 +1,4 @@
-package com.eheiker.appdirect.domain.appdirect.event.subscription;
+package com.eheiker.appdirect.domain.appdirect.event.access;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -13,13 +13,11 @@ import com.eheiker.appdirect.domain.appdirect.event.EventType;
 @ToString
 @EqualsAndHashCode(callSuper = true)
 @XmlRootElement(name = "event")
-public class SubscriptionCancelEvent extends Event {
+public class UserUnassignedEvent extends Event {
 
-    private SubscriptionCancelPayload payload;
+    private AssignmentPayload payload;
 
-    public SubscriptionCancelEvent() {
-        super(EventType.SUBSCRIPTION_CANCEL);
+    public UserUnassignedEvent() {
+        super(EventType.USER_UNASSIGNED);
     }
-
-
 }

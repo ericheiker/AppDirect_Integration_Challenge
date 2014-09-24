@@ -17,7 +17,7 @@ import com.eheiker.appdirect.client.AppDirectClient;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class GetEventAction<T> extends AppDirectAction {
+public class GetEventAction extends AppDirectAction {
 
     private static Logger log = LoggerFactory.getLogger(GetEventAction.class);
 
@@ -33,7 +33,7 @@ public class GetEventAction<T> extends AppDirectAction {
         ActionResult<T> result = new ActionResult();
 
         try {
-            T event = getEvent(url, token, resultType);
+            T event = getEvent(url, resultType);
             result.setEntity(event);
             result.setSuccess(true);
 
@@ -46,7 +46,7 @@ public class GetEventAction<T> extends AppDirectAction {
         return result;
     }
 
-    protected <T> T getEvent(final String url, final String token, final Class<T> clazz) throws JAXBException, OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
+    protected <T> T getEvent(final String url, final Class<T> clazz) throws JAXBException, OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
         return client.signAndGet(url, clazz);
     }
 }

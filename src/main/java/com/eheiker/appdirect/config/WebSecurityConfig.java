@@ -8,6 +8,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -31,6 +32,12 @@ import com.eheiker.appdirect.security.CustomUserDetailsService;
 @Configuration
 @EnableWebMvcSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Value("${APPDIRECT_CONSUMER_KEY}")
+    private String consumerKey;
+
+    @Value("${APPDIRECT_SECRET}")
+    private String secret;
 
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
@@ -78,12 +85,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         InMemoryConsumerDetailsService consumerDetailsService = new InMemoryConsumerDetailsService();
 
         BaseConsumerDetails consumerDetails = new BaseConsumerDetails();
-        consumerDetails.setConsumerKey("appdirect-integration-challenge-14572");
-        consumerDetails.setSignatureSecret(new SharedConsumerSecretImpl("dBwGkwY2R84FAXwS"));
+        consumerDetails.setConsumerKey(consumerKey);
+        consumerDetails.setSignatureSecret(new SharedConsumerSecretImpl(secret));
         consumerDetails.setRequiredToObtainAuthenticatedToken(false);
 
         Map<String, BaseConsumerDetails> consumerDetailsStore = new HashMap<>();
-        consumerDetailsStore.put("appdirect-integration-challenge-14572", consumerDetails);
+        consumerDetailsStore.put(consumerKey, consumerDetails);
 
         consumerDetailsService.setConsumerDetailsStore(consumerDetailsStore);
 

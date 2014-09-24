@@ -1,6 +1,6 @@
 package com.eheiker.appdirect.domain.appdirect.event.subscription;
 
-import com.eheiker.appdirect.domain.appdirect.event.Account;
+import com.eheiker.appdirect.domain.appdirect.Account;
 
 public class SubscriptionCancelPayload {
     Account account;

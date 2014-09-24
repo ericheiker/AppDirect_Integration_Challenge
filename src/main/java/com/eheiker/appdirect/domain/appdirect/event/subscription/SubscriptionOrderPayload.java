@@ -5,8 +5,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import lombok.Data;
 import lombok.ToString;
 
-import com.eheiker.appdirect.domain.appdirect.event.Company;
-import com.eheiker.appdirect.domain.appdirect.event.Order;
+import com.eheiker.appdirect.domain.appdirect.Company;
+import com.eheiker.appdirect.domain.appdirect.Order;
 
 @Data
 @ToString
