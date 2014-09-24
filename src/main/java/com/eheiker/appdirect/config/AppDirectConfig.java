@@ -1,15 +1,23 @@
 package com.eheiker.appdirect.config;
 
-import org.apache.oltu.oauth2.client.OAuthClient;
-import org.apache.oltu.oauth2.client.URLConnectionClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+import com.eheiker.appdirect.client.AppDirectClient;
+
+@Configuration
 public class AppDirectConfig {
 
-    @Bean
-    public OAuthClient appDirectOAuthClient() {
+    @Value("${APPDIRECT_CONSUMER_KEY}")
+    private String consumerKey;
 
-        OAuthClient client = new OAuthClient(new URLConnectionClient());
+    @Value("${APPDIRECT_SECRET}")
+    private String secret;
+
+    @Bean
+    public AppDirectClient appDirectClient() {
+        AppDirectClient client = new AppDirectClient("appdirect-integration-challenge-14572", "dBwGkwY2R84FAXwS");
 
         return client;
     }

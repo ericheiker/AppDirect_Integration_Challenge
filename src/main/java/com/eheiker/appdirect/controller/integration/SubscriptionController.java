@@ -1,8 +1,6 @@
 package com.eheiker.appdirect.controller.integration;
 
 import java.io.IOException;
-import java.util.Enumeration;
-import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.JAXBException;
@@ -11,31 +9,23 @@ import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 
-import org.apache.oltu.oauth2.client.OAuthClient;
-import org.apache.oltu.oauth2.client.URLConnectionClient;
-import org.apache.oltu.oauth2.client.request.OAuthBearerClientRequest;
-import org.apache.oltu.oauth2.client.request.OAuthClientRequest;
-import org.apache.oltu.oauth2.client.response.OAuthResourceResponse;
-import org.apache.oltu.oauth2.common.OAuth.HttpMethod;
 import org.apache.oltu.oauth2.common.exception.OAuthProblemException;
 import org.apache.oltu.oauth2.common.exception.OAuthSystemException;
-import org.apache.oltu.oauth2.common.validators.OAuthValidator;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 
+import com.eheiker.appdirect.client.AppDirectClient;
+import com.eheiker.appdirect.client.EventService;
+import com.eheiker.appdirect.client.action.ActionResult;
+import com.eheiker.appdirect.client.action.GetSubscriptionOrderEventAction;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionCancelEvent;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionEventResult;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionOrderEvent;
 import com.eheiker.appdirect.logging.AutowiredLogger;
-import com.eheiker.appdirect.service.appdirect.EventService;
-import com.eheiker.appdirect.service.appdirect.SubscriptionService;
 
 /**
  * http://info.appdirect.com/developers/docs/api_integration/subscription_management
@@ -50,19 +40,26 @@ public class SubscriptionController {
     @Autowired
     EventService eventService;
 
+    @Autowired
+    AppDirectClient appDirectClient;
+
     @RequestMapping(value = "/create", method = RequestMethod.GET)
     public SubscriptionEventResult create(HttpServletRequest request, @RequestParam String url, @RequestParam String token) throws OAuthSystemException, OAuthProblemException, JAXBException, OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
         // validate oauth signature: http://info.appdirect.com/developers/docs/api_integration/oauth_api_authentication/
 
-        // perform OAuth-signed GET request to url to get event details
-        SubscriptionOrderEvent orderEvent = eventService.getEvent(url, token, SubscriptionOrderEvent.class);
+        GetSubscriptionOrderEventAction action = new GetSubscriptionOrderEventAction(appDirectClient);
+        action.setUrl(url);
+        action.setToken(token);
+        ActionResult<SubscriptionOrderEvent> event = action.execute();
 
         // create an account
+            // create user from event
+            // userService.create();
 
         // return result XML
         SubscriptionEventResult result = new SubscriptionEventResult();
         result.setAccountIdentifier("12345");
-        result.setMessage(orderEvent.toString());
+        result.setMessage(event.toString());
         result.setSuccess(true);
 
         return result;

@@ -23,7 +23,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(final HttpSecurity http) throws Exception {
         http
-            .csrf().disable()
+            .csrf().disable();
+        http
             .authorizeRequests()
                 .antMatchers("/", "/home").permitAll()
                 .anyRequest().authenticated();
@@ -45,19 +46,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .required(true);
         http
             .logout()
-                .logoutSuccessHandler(new LogoutSuccessHandler() {
-                    @Override
-                    public void onLogoutSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException, ServletException {
-                        if (authentication instanceof OpenIDAuthenticationToken) {
-                            OpenIDAuthenticationToken openIDToken = (OpenIDAuthenticationToken) authentication;
-                            response.sendRedirect("https://www.appdirect.com/applogout?openid=" + openIDToken.getIdentityUrl());
-                        } else {
-                            response.sendRedirect("/?logout");
-                        }
+                .logoutSuccessHandler(new CustomLogoutSuccessHandler());
+    }
 
-                        return;
-                    }
+    private class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
+        @Override
+        public void onLogoutSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException, ServletException {
+            if (authentication instanceof OpenIDAuthenticationToken) {
+                OpenIDAuthenticationToken openIDToken = (OpenIDAuthenticationToken) authentication;
+                response.sendRedirect("https://www.appdirect.com/applogout?openid=" + openIDToken.getIdentityUrl());
+            } else {
+                response.sendRedirect("/?logout");
+            }
 
-                });
+            return;
+        }
     }
 }
