@@ -21,7 +21,9 @@ import com.eheiker.appdirect.domain.appdirect.event.access.UserAssignedEvent;
 import com.eheiker.appdirect.domain.appdirect.event.access.UserUnassignedEvent;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionCancelEvent;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionOrderEvent;
+import com.eheiker.appdirect.domain.myapp.Profile;
 import com.eheiker.appdirect.logging.AutowiredLogger;
+import com.eheiker.appdirect.service.myapp.ProfileService;
 
 /**
  * http://info.appdirect.com/developers/docs/api_integration/subscription_management
@@ -36,6 +38,9 @@ public class AppDirectController {
     @Autowired
     AppDirectClient appDirectClient;
 
+    @Autowired
+    ProfileService profileService;
+
     @RequestMapping(value = "/subscription/create")
     public EventResult createSubscription(HttpServletRequest request,
             @RequestParam String url,
@@ -49,11 +54,17 @@ public class AppDirectController {
         action.setToken(token);
         ActionResult<SubscriptionOrderEvent> actionResult = action.execute();
 
-        //TODO: create an account
+        SubscriptionOrderEvent event = actionResult.getEntity();
+
+        Profile profile = Profile.builder()
+               .firstName(event.getCreator().getFirstName())
+               .lastName(event.getCreator().getLastName()).build();
+
+        profile = profileService.create(profile);
 
         // return result XML
         EventResult result = new EventResult();
-        result.setAccountIdentifier("12345");
+        result.setAccountIdentifier(profile.getId().toString());
         result.setMessage("Welcome to AppDirect!");
         result.setSuccess(actionResult.isSuccess());
 

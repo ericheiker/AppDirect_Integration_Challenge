@@ -1,4 +1,4 @@
-package com.eheiker.appdirect.controller;
+package com.eheiker.appdirect.controller.web;
 
 import org.slf4j.Logger;
 import org.springframework.stereotype.Controller;

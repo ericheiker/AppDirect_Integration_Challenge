@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:mem:test;MODE=PostgreSQL
+    schema: classpath:/schema.sql
+
+---
+
+spring:
+  profiles: local
+  datasource:
+    url: jdbc:postgresql://localhost/test
+    username: root
+    password: changeme
+    driverClassName: org.postgresql.Driver
+    schema:
