@@ -16,6 +16,8 @@ import com.eheiker.appdirect.client.action.GetSubscriptionCancelEventAction;
 import com.eheiker.appdirect.client.action.GetSubscriptionOrderEventAction;
 import com.eheiker.appdirect.client.action.GetUserAssignedEventAction;
 import com.eheiker.appdirect.client.action.GetUserUnassignedEventAction;
+import com.eheiker.appdirect.domain.appdirect.Creator;
+import com.eheiker.appdirect.domain.appdirect.User;
 import com.eheiker.appdirect.domain.appdirect.event.EventResult;
 import com.eheiker.appdirect.domain.appdirect.event.access.UserAssignedEvent;
 import com.eheiker.appdirect.domain.appdirect.event.access.UserUnassignedEvent;
@@ -55,16 +57,21 @@ public class AppDirectController {
         ActionResult<SubscriptionOrderEvent> actionResult = action.execute();
 
         SubscriptionOrderEvent event = actionResult.getEntity();
+        Creator creator = event.getCreator();
 
-        Profile profile = new Profile();
-        profile.setFirstName(event.getCreator().getFirstName());
-        profile.setLastName(event.getCreator().getLastName());
+        Profile profile = profileService.getByOpenID(creator.getOpenId());
+        if (profile == null) {
+            profile = new Profile();
+            profile.setFirstName(creator.getFirstName());
+            profile.setLastName(creator.getLastName());
+            profile.setOpenId(creator.getOpenId());
 
-        profile = profileService.create(profile);
+            profile = profileService.create(profile);
+        }
 
         // return result XML
         EventResult result = new EventResult();
-        result.setAccountIdentifier(profile.getId().toString());
+        result.setAccountIdentifier("eheiker-appdirect");
         result.setMessage("Welcome to AppDirect!");
         result.setSuccess(true);
 
@@ -85,14 +92,12 @@ public class AppDirectController {
         action.setToken(token);
         SubscriptionCancelEvent event = action.execute().getEntity();
 
-        Long accountId = event.getPayload().getAccount().getAccountIdentifier();
-        profileService.delete(accountId);
-        boolean deleted = !profileService.exists(accountId);
+        //TODO: delete all accounts in system tied to this accountId
 
         // return result XML
         EventResult result = new EventResult();
         result.setMessage(event.toString());
-        result.setSuccess(deleted);
+        result.setSuccess(true);
 
         return result;
     }
@@ -110,18 +115,22 @@ public class AppDirectController {
         action.setUrl(url);
         action.setToken(token);
         UserAssignedEvent event = action.execute().getEntity();
+        User user = event.getPayload().getUser();
 
-        Profile profile = new Profile();
-        profile.setFirstName(event.getPayload().getUser().getFirstName());
-        profile.setLastName(event.getPayload().getUser().getLastName());
+        Profile profile = profileService.getByOpenID(user.getOpenId());
+        if (profile == null) {
+            profile = new Profile();
+            profile.setFirstName(user.getFirstName());
+            profile.setLastName(user.getLastName());
+            profile.setOpenId(user.getOpenId());
 
-        profile = profileService.create(profile);
+            profile = profileService.create(profile);
+        }
 
         // return result XML
         EventResult result = new EventResult();
-        result.setAccountIdentifier(profile.getId().toString());
         result.setMessage(event.toString());
-        result.setSuccess(true);
+        result.setSuccess(profile != null);
 
         return result;
     }
@@ -140,9 +149,14 @@ public class AppDirectController {
         action.setToken(token);
         UserUnassignedEvent event = action.execute().getEntity();
 
-        Long accountId = event.getPayload().getAccount().getAccountIdentifier();
-        profileService.delete(accountId);
-        boolean deleted = !profileService.exists(accountId);
+        String openId = event.getPayload().getUser().getOpenId();
+        Profile profile = profileService.getByOpenID(openId);
+
+        boolean deleted = true;
+        if (profile != null) {
+            profileService.delete(profile.getId());
+            deleted = !profileService.exists(profile.getId());
+        }
 
         // return result XML
         EventResult result = new EventResult();
