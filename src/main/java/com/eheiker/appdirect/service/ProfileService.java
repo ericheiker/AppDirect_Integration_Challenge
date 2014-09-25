@@ -1,4 +1,4 @@
-package com.eheiker.appdirect.service.myapp;
+package com.eheiker.appdirect.service;
 
 import java.io.Serializable;
 

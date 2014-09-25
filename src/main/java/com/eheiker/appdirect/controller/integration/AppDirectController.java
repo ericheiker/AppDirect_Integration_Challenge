@@ -23,7 +23,7 @@ import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionCan
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionOrderEvent;
 import com.eheiker.appdirect.domain.myapp.Profile;
 import com.eheiker.appdirect.logging.AutowiredLogger;
-import com.eheiker.appdirect.service.myapp.ProfileService;
+import com.eheiker.appdirect.service.ProfileService;
 
 /**
  * http://info.appdirect.com/developers/docs/api_integration/subscription_management
@@ -66,7 +66,7 @@ public class AppDirectController {
         EventResult result = new EventResult();
         result.setAccountIdentifier(profile.getId().toString());
         result.setMessage("Welcome to AppDirect!");
-        result.setSuccess(actionResult.isSuccess());
+        result.setSuccess(true);
 
         return result;
     }
@@ -85,11 +85,14 @@ public class AppDirectController {
         action.setToken(token);
         SubscriptionCancelEvent event = action.execute().getEntity();
 
+        Long accountId = event.getPayload().getAccount().getAccountIdentifier();
+        profileService.delete(accountId);
+        boolean deleted = !profileService.exists(accountId);
+
         // return result XML
         EventResult result = new EventResult();
-        result.setAccountIdentifier("12345");
         result.setMessage(event.toString());
-        result.setSuccess(true);
+        result.setSuccess(deleted);
 
         return result;
     }
@@ -108,9 +111,15 @@ public class AppDirectController {
         action.setToken(token);
         UserAssignedEvent event = action.execute().getEntity();
 
+        Profile profile = Profile.builder()
+                                 .firstName(event.getCreator().getFirstName())
+                                 .lastName(event.getCreator().getLastName()).build();
+
+        profile = profileService.create(profile);
+
         // return result XML
         EventResult result = new EventResult();
-        result.setAccountIdentifier("12345");
+        result.setAccountIdentifier(profile.getId().toString());
         result.setMessage(event.toString());
         result.setSuccess(true);
 
@@ -131,11 +140,14 @@ public class AppDirectController {
         action.setToken(token);
         UserUnassignedEvent event = action.execute().getEntity();
 
+        Long accountId = event.getPayload().getAccount().getAccountIdentifier();
+        profileService.delete(accountId);
+        boolean deleted = !profileService.exists(accountId);
+
         // return result XML
         EventResult result = new EventResult();
-        result.setAccountIdentifier("12345");
         result.setMessage(event.toString());
-        result.setSuccess(true);
+        result.setSuccess(deleted);
 
         return result;
     }

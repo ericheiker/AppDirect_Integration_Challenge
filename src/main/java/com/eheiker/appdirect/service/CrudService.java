@@ -1,4 +1,4 @@
-package com.eheiker.appdirect.service.myapp;
+package com.eheiker.appdirect.service;
 
 import java.io.Serializable;
 import java.util.List;
@@ -45,4 +45,20 @@ public interface CrudService<M, ID extends Serializable> {
      */
     M update(final ID id, final M resource);
 
+    /**
+     * Delete an entity.
+     *
+     * @param id entity's id
+     * @throws IllegalArgumentException when id is null or empty
+     */
+    void delete(final ID id);
+
+    /**
+     * Check if entity exists.
+     *
+     * @param id entity's id
+     * @return true if entity exists, false if not
+     * @throws IllegalArgumentException when id is null or empty
+     */
+    boolean exists(final ID id);
 }

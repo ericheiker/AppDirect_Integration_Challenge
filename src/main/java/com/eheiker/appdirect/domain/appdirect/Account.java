@@ -6,6 +6,6 @@ import lombok.ToString;
 @Data
 @ToString
 public class Account {
-    private String accountIdentifier;
+    private Long accountIdentifier;
     private String status;
 }

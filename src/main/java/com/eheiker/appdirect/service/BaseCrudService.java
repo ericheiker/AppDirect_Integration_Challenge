@@ -1,4 +1,4 @@
-package com.eheiker.appdirect.service.myapp;
+package com.eheiker.appdirect.service;
 
 import java.io.Serializable;
 import java.util.List;
@@ -44,6 +44,24 @@ public abstract class BaseCrudService<M, ID extends Serializable> implements Cru
         }
 
         return getRepository().save(model);
+    }
+
+    @Override
+    public void delete(final ID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+
+        getRepository().delete(id);
+    }
+
+    @Override
+    public boolean exists(final ID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID cannot be null");
+        }
+
+        return getRepository().exists(id);
     }
 
     protected abstract BaseRepository<M, Serializable> getRepository();

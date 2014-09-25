@@ -1,0 +1,14 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
+<head>
+    <title tiles:fragment="title">Users</title>
+</head>
+<body>
+<div tiles:fragment="content">
+    <h1>Users</h1>
+    <table>
+        <thead>
+            <tr th:text="#{users.id}"></tr>
+        </thead>
+    </table>
+</div>
+</body>
