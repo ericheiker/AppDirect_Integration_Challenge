@@ -1,7 +1,9 @@
 package com.eheiker.appdirect.config;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -26,7 +28,10 @@ import org.springframework.security.oauth.provider.token.OAuthProviderTokenServi
 import org.springframework.security.openid.OpenIDAuthenticationFilter;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.eheiker.appdirect.security.CustomProtectedResourceProcessingFilter;
 import com.eheiker.appdirect.security.CustomUserDetailsService;
 
 @Configuration
@@ -72,7 +77,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     OAuthProviderProcessingFilter oAuthProviderProcessingFilter() {
-        ProtectedResourceProcessingFilter filter = new ProtectedResourceProcessingFilter();
+        List<RequestMatcher> requestMatchers = new ArrayList<>();
+        requestMatchers.add(new AntPathRequestMatcher("/appdirect/**"));
+        ProtectedResourceProcessingFilter filter = new CustomProtectedResourceProcessingFilter(requestMatchers);
 
         filter.setConsumerDetailsService(consumerDetailsService());
         filter.setTokenServices(providerTokenServices());
@@ -116,4 +123,5 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             return;
         }
     }
+
 }
