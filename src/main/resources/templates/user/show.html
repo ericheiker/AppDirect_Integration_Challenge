@@ -1,33 +1,50 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
 <head>
-    <title tiles:fragment="title">Messages : Login</title>
+    <title>User Info</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <style>
+        body { padding-top: 70px; }
+    </style>
 </head>
 <body>
-<div tiles:fragment="content">
-    <h1>User Attributes</h1>
-    <table class="table table-border">
-        <thead>
-        <tr>
-            <th>Attribute Name</th>
-            <th>Attribute Value</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr>
-            <td>ID</td>
-            <td th:text="${authentication.identityUrl}">https://example.com/user/id</td>
-        </tr>
-        <tr th:each="attribute : ${authentication.attributes}">
-            <td th:text="${attribute.name}">Attribute Name</td>
-            <td>
-                <dl th:each="value : ${attribute.values}">
-                    <dd th:text="${value}">Attribute Value</dd>
-                </dl>
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <a href="/logout">logout</a>
+<div class="container">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/}">Home</a></li>
+                <li class="active"><a href="#">Profile</a></li>
+                <li><a th:href="@{users}">Users</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="starter-template">
+        <h1>User Attributes</h1>
+        <table class="table table-border">
+            <thead>
+            <tr>
+                <th>Attribute Name</th>
+                <th>Attribute Value</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>ID</td>
+                <td th:text="${authentication.identityUrl}">https://example.com/user/id</td>
+            </tr>
+            <tr th:each="attribute : ${authentication.attributes}">
+                <td th:text="${attribute.name}">Attribute Name</td>
+                <td>
+                    <dl th:each="value : ${attribute.values}">
+                        <dd th:text="${value}">Attribute Value</dd>
+                    </dl>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <a href="/logout">logout</a>
+    </div>
 </div>
 </body>
 </html>

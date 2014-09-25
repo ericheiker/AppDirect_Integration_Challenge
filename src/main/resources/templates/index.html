@@ -3,10 +3,29 @@
 <head>
     <title>Hello Spring Boot!</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <style>
+        body { padding-top: 70px; }
+    </style>
 </head>
 <body>
-<p>Hello Spring Boot!</p>
-<a th:href="@{user}">User Info</a>
-<a th:href="@{users}">Users</a>
+<div class="container">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="#">Home</a></li>
+                <li><a th:href="@{user}">User Info</a></li>
+                <li><a th:href="@{users}">Users</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="starter-template">
+        <h1>Welcome to the *drummroll* AppDirect Integration Challenge!</h1>
+        <table>
+            <tr><td><a th:href="@{user}">User Info</a></td></tr>
+            <tr><td><a th:href="@{users}">Users</a></td></tr>
+        </table>
+    </div>
+</div>
 </body>
 </html>

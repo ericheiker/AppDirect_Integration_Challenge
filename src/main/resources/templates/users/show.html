@@ -1,24 +1,41 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:tiles="http://www.thymeleaf.org">
 <head>
-    <title tiles:fragment="title">Users</title>
+    <title>Users</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"/>
+    <style>
+        body { padding-top: 70px; }
+    </style>
 </head>
 <body>
-<div tiles:fragment="content">
-    <h1>Users</h1>
-    <table>
-        <thead>
-            <tr>ID</tr>
-            <tr>First Name</tr>
-            <tr>Last Name</tr>
-        </thead>
-        <tbody>
-            <tr th:each="user : ${users}">
-                <td th:text="${user.id}"></td>
-                <td th:text="${user.firstName}"></td>
-                <td th:text="${user.lastName}"></td>
-            </tr>
-        </tbody>
-    </table>
+<div class="container">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+        <div class="container">
+            <ul class="nav navbar-nav">
+                <li><a th:href="@{/}">Home</a></li>
+                <li><a th:href="@{user}">Profile</a></li>
+                <li class="active"><a href="#">Users</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="starter-template">
+        <h1>Users</h1>
+        <table>
+            <thead>
+                <tr>ID</tr>
+                <tr>First Name</tr>
+                <tr>Last Name</tr>
+            </thead>
+            <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.firstName}"></td>
+                    <td th:text="${user.lastName}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 </body>
 </html>
