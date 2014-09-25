@@ -112,8 +112,8 @@ public class AppDirectController {
         UserAssignedEvent event = action.execute().getEntity();
 
         Profile profile = new Profile();
-        profile.setFirstName(event.getCreator().getFirstName());
-        profile.setLastName(event.getCreator().getLastName());
+        profile.setFirstName(event.getPayload().getUser().getFirstName());
+        profile.setLastName(event.getPayload().getUser().getLastName());
 
         profile = profileService.create(profile);
 
