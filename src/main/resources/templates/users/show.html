@@ -15,14 +15,14 @@
                 <li><a th:href="@{/}">Home</a></li>
                 <li><a th:href="@{user}">Profile</a></li>
                 <li class="active"><a href="#">Users</a></li>
-                <a href="/logout" th:if="${authenticated}">logout</a>
+                <li><a href="/logout" th:if="${authenticated}">logout</a></li>
             </ul>
         </div>
     </div>
 
     <div class="starter-template">
         <h1>Users</h1>
-        <table class="table table-border">
+        <table class="table table-border" th:unless="${#lists.isEmpty(users)}">
             <thead>
                 <tr>
                     <th>ID</th>
@@ -38,6 +38,7 @@
                 </tr>
             </tbody>
         </table>
+        <h2 th:if="${#lists.isEmpty(users)}">Nada here</h2>
     </div>
 </div>
 </body>
