@@ -1,6 +1,7 @@
 package com.eheiker.appdirect.controller.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.openid.OpenIDAuthenticationStatus;
 import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,12 +19,14 @@ public class UserController {
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public String showCurrentUser(Model model, OpenIDAuthenticationToken authentication) {
         model.addAttribute("authentication", authentication);
+        model.addAttribute("authenticated", authentication != null ? OpenIDAuthenticationStatus.SUCCESS.equals(authentication.getStatus()) : Boolean.FALSE);
         return "user/show";
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public String showAllUsers(Model model) {
+    public String showAllUsers(Model model, OpenIDAuthenticationToken authentication) {
         model.addAttribute("users", profileService.getAll());
+        model.addAttribute("authenticated", authentication != null ? OpenIDAuthenticationStatus.SUCCESS.equals(authentication.getStatus()) : Boolean.FALSE);
         return "users/show";
     }
 

@@ -15,6 +15,7 @@
                 <li><a th:href="@{/}">Home</a></li>
                 <li class="active"><a href="#">Profile</a></li>
                 <li><a th:href="@{users}">Users</a></li>
+                <a href="/logout" th:if="${authenticated}">logout</a>
             </ul>
         </div>
     </div>
@@ -43,7 +44,6 @@
             </tr>
             </tbody>
         </table>
-        <a href="/logout">logout</a>
     </div>
 </div>
 </body>

@@ -15,17 +15,20 @@
                 <li><a th:href="@{/}">Home</a></li>
                 <li><a th:href="@{user}">Profile</a></li>
                 <li class="active"><a href="#">Users</a></li>
+                <a href="/logout" th:if="${authenticated}">logout</a>
             </ul>
         </div>
     </div>
 
     <div class="starter-template">
         <h1>Users</h1>
-        <table>
+        <table class="table table-border">
             <thead>
-                <tr>ID</tr>
-                <tr>First Name</tr>
-                <tr>Last Name</tr>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                </tr>
             </thead>
             <tbody>
                 <tr th:each="user : ${users}">

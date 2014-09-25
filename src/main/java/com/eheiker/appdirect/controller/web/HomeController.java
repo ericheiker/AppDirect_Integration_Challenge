@@ -1,19 +1,17 @@
 package com.eheiker.appdirect.controller.web;
 
-import org.slf4j.Logger;
+import org.springframework.security.openid.OpenIDAuthenticationStatus;
+import org.springframework.security.openid.OpenIDAuthenticationToken;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import com.eheiker.appdirect.logging.AutowiredLogger;
 
 @Controller
 public class HomeController {
 
-    @AutowiredLogger
-    private Logger log;
-
     @RequestMapping("/")
-    public String index() {
+    public String index(Model model, OpenIDAuthenticationToken authentication) {
+        model.addAttribute("authenticated", authentication != null ? OpenIDAuthenticationStatus.SUCCESS.equals(authentication.getStatus()) : Boolean.FALSE);
         return "index";
     }
 
