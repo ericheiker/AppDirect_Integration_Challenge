@@ -56,9 +56,9 @@ public class AppDirectController {
 
         SubscriptionOrderEvent event = actionResult.getEntity();
 
-        Profile profile = Profile.builder()
-               .firstName(event.getCreator().getFirstName())
-               .lastName(event.getCreator().getLastName()).build();
+        Profile profile = new Profile();
+        profile.setFirstName(event.getCreator().getFirstName());
+        profile.setLastName(event.getCreator().getLastName());
 
         profile = profileService.create(profile);
 
@@ -111,9 +111,9 @@ public class AppDirectController {
         action.setToken(token);
         UserAssignedEvent event = action.execute().getEntity();
 
-        Profile profile = Profile.builder()
-                                 .firstName(event.getCreator().getFirstName())
-                                 .lastName(event.getCreator().getLastName()).build();
+        Profile profile = new Profile();
+        profile.setFirstName(event.getCreator().getFirstName());
+        profile.setLastName(event.getCreator().getLastName());
 
         profile = profileService.create(profile);
 

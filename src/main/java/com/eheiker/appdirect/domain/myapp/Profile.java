@@ -5,13 +5,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.experimental.Builder;
 
 @Data
 @Entity
-@Builder
-@NoArgsConstructor
 public class Profile {
 
     @Id
