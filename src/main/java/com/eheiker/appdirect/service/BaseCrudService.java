@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import org.springframework.dao.DataRetrievalFailureException;
+import org.springframework.dao.EmptyResultDataAccessException;
 
 import com.eheiker.appdirect.repository.BaseRepository;
 
@@ -52,7 +53,11 @@ public abstract class BaseCrudService<M, ID extends Serializable> implements Cru
             throw new IllegalArgumentException("ID cannot be null");
         }
 
-        getRepository().delete(id);
+        try {
+            getRepository().delete(id);
+        } catch (EmptyResultDataAccessException e) {
+            // eat it
+        }
     }
 
     @Override
