@@ -14,9 +14,12 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionCancelEvent;
 import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionOrderEvent;
@@ -24,8 +27,7 @@ import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionOrd
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.CoreMatchers.*;
 
-@Ignore
-@RunWith(MockitoJUnitRunner.class)
+@RunWith(JUnit4.class)
 public class AppDirectClientTests {
 
     private final static String CONSUMER_KEY = "Dummy";
@@ -45,6 +47,8 @@ public class AppDirectClientTests {
     @Before
     public void setup() {
         this.client = new AppDirectClient(CONSUMER_KEY, CONSUMER_SECRET);
+
+        MockitoAnnotations.initMocks(this);
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -73,6 +77,7 @@ public class AppDirectClientTests {
     }
 
     @Test
+    @Ignore
     public void testSignAndGet() throws JAXBException, OAuthExpectationFailedException, OAuthCommunicationException, OAuthMessageSignerException, IOException {
 
 
