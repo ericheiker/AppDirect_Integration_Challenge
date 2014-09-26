@@ -61,6 +61,7 @@ public abstract class RestControllerTestIT {
     private String secret;
 
     protected <T> ResponseEntity<T> getForEntity(String path, Class<T> responseType) throws IOException, OAuthCommunicationException, OAuthExpectationFailedException, OAuthMessageSignerException {
+        // lot of this could be refactored out or made more general (for post requests, etc)
         HttpClientOAuthConsumer consumer = new HttpClientOAuthConsumer(consumerKey, secret);
         consumer.setSigningStrategy(new AuthorizationHeaderSigningStrategy());
 

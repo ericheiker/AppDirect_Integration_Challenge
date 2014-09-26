@@ -26,4 +26,10 @@ public class SubscriptionTestController {
         Resource resource = context.getResource("classpath:SubscriptionOrderEvent.xml");
         return IOUtils.toString(resource.getInputStream());
     }
+
+    @RequestMapping(value = "/event/cancelSuccess")
+    public String cancelSubscriptionOrderEvent() throws JAXBException, IOException {
+        Resource resource = context.getResource("classpath:SubscriptionCancelEvent.xml");
+        return IOUtils.toString(resource.getInputStream());
+    }
 }

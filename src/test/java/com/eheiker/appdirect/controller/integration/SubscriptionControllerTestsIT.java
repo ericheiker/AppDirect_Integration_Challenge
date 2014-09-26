@@ -31,4 +31,17 @@ public class SubscriptionControllerTestsIT extends RestControllerTestIT {
         EventResult eventResult = result.getBody();
         assertEquals(true, eventResult.isSuccess());
     }
+
+    @Test
+    public void cancelSuccess() throws JAXBException, IOException, OAuthCommunicationException, OAuthExpectationFailedException, OAuthMessageSignerException {
+
+        String url = constructUrl("/test/event/cancelSuccess");
+
+        ResponseEntity<EventResult> result = getForEntity("/appdirect/subscription/cancel?url=" + url + "&token=test", EventResult.class);
+
+        assertEquals(HttpStatus.OK, result.getStatusCode());
+
+        EventResult eventResult = result.getBody();
+        assertEquals(true, eventResult.isSuccess());
+    }
 }
