@@ -14,7 +14,7 @@ import com.eheiker.appdirect.service.ProfileService;
 public class UserController {
 
     @Autowired
-    private ProfileService profileService;
+    ProfileService profileService;
 
     @RequestMapping(value = "/user", method = RequestMethod.GET)
     public String showCurrentUser(Model model, OpenIDAuthenticationToken authentication) {

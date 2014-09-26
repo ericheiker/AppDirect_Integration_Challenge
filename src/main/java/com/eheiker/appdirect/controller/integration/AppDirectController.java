@@ -16,7 +16,6 @@ import com.eheiker.appdirect.client.action.GetSubscriptionCancelEventAction;
 import com.eheiker.appdirect.client.action.GetSubscriptionOrderEventAction;
 import com.eheiker.appdirect.client.action.GetUserAssignedEventAction;
 import com.eheiker.appdirect.client.action.GetUserUnassignedEventAction;
-import com.eheiker.appdirect.domain.appdirect.Creator;
 import com.eheiker.appdirect.domain.appdirect.User;
 import com.eheiker.appdirect.domain.appdirect.event.EventResult;
 import com.eheiker.appdirect.domain.appdirect.event.access.UserAssignedEvent;
@@ -26,6 +25,7 @@ import com.eheiker.appdirect.domain.appdirect.event.subscription.SubscriptionOrd
 import com.eheiker.appdirect.domain.myapp.Profile;
 import com.eheiker.appdirect.logging.AutowiredLogger;
 import com.eheiker.appdirect.service.ProfileService;
+import com.eheiker.appdirect.service.appdirect.UserService;
 
 /**
  * http://info.appdirect.com/developers/docs/api_integration/subscription_management
@@ -43,6 +43,9 @@ public class AppDirectController {
     @Autowired
     ProfileService profileService;
 
+    @Autowired
+    UserService userService;
+
     @RequestMapping(value = "/subscription/create")
     public EventResult createSubscription(HttpServletRequest request,
             @RequestParam String url,
@@ -57,23 +60,15 @@ public class AppDirectController {
         ActionResult<SubscriptionOrderEvent> actionResult = action.execute();
 
         SubscriptionOrderEvent event = actionResult.getEntity();
-        Creator creator = event.getCreator();
+        User user = event.getCreator();
 
-        Profile profile = profileService.getByOpenID(creator.getOpenId());
-        if (profile == null) {
-            profile = new Profile();
-            profile.setFirstName(creator.getFirstName());
-            profile.setLastName(creator.getLastName());
-            profile.setOpenId(creator.getOpenId());
-
-            profile = profileService.create(profile);
-        }
+        Profile profile = userService.createProfile(user);
 
         // return result XML
         EventResult result = new EventResult();
         result.setAccountIdentifier("eheiker-appdirect");
         result.setMessage("Welcome to AppDirect!");
-        result.setSuccess(true);
+        result.setSuccess(profile != null);
 
         return result;
     }
@@ -117,15 +112,7 @@ public class AppDirectController {
         UserAssignedEvent event = action.execute().getEntity();
         User user = event.getPayload().getUser();
 
-        Profile profile = profileService.getByOpenID(user.getOpenId());
-        if (profile == null) {
-            profile = new Profile();
-            profile.setFirstName(user.getFirstName());
-            profile.setLastName(user.getLastName());
-            profile.setOpenId(user.getOpenId());
-
-            profile = profileService.create(profile);
-        }
+        Profile profile = userService.createProfile(user);
 
         // return result XML
         EventResult result = new EventResult();
@@ -169,8 +156,12 @@ public class AppDirectController {
     private void logRequest(HttpServletRequest request, ConsumerAuthentication authentication) {
         if (log.isDebugEnabled()) {
             log.debug("request = " + request.getRequestURI() + "?" + request.getQueryString());
-            log.debug("authenticated = " + authentication.isAuthenticated());
-            log.debug("signature validated = " + authentication.isSignatureValidated());
+            if (authentication != null) {
+                log.debug("authenticated = " + authentication.isAuthenticated());
+                log.debug("signature validated = " + authentication.isSignatureValidated());
+            } else {
+                log.debug("Request not authenticated");
+            }
         }
     }
 }
